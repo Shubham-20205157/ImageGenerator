@@ -15,10 +15,11 @@ const CreatePost = () => {
 
   }
   const changeHandler = (e) =>{
-
+    setForm({...form,[e.target.name]:e.target.value});
   }
   const supriseMeHandler = (e) =>{
-
+    const randomPrompt = getRandomPrompt(form.prompt);
+    setForm({...form,prompt: randomPrompt});
   }
   const generateImageHandler = () =>{
 
