@@ -1,8 +1,17 @@
 import React from 'react'
 
-const FormFiled = () => {
+const FormFiled = ({
+          labelName ,
+          type ,
+          name,
+          placeholder,
+          value,
+          changeHandler,
+          isSuprisseMe,
+          supriseMeHandler 
+}) => {
   return (
-    <div>formFiled</div>
+    <div className='flex items-center gap-2 mb-2'></div>
   )
 }
 

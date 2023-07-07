@@ -29,7 +29,7 @@ const Home = () => {
             {searchText ? (<RenderPosts data = {[]} title = "No Search Found"/>
             )
             :(
-            <RenderPosts data = {[]} titlt = "No Post Found"/>)}
+            <RenderPosts data = {[]} title = "No Post Found"/>)}
             </div>
           </>)
         }
