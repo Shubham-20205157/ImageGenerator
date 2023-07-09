@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRandomPrompt } from '../utils';
 import { preview } from '../assets';
@@ -11,8 +11,47 @@ const CreatePost = () => {
     prompt:'',
     photo:'',
   });
-  const submitHandler = ()=>{
-
+  // what will happen when something in the list chagnges the components reload itself
+  useEffect(()=>{
+    const fetchPosts = async ()=>{
+      setLoading(true);
+      try{
+        // we will fetch all the post by making a request to the posts get.
+      }
+      catch(error){
+        alert(error);
+      }
+      finally{
+        setLoading(false);
+      }
+    }
+  },[]);
+  const submitHandler = async(e)=>{
+    console.log("Submit Handler Clicked");
+    e.preventDefault();
+    if(form.prompt && form.photo){
+      setLoading(true);
+      try{
+        const res = await fetch('http://localhost:8000/api/v1/posts',{
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form)
+        });
+        await res.json(); // convert it into json...
+        navigate('/');
+      }
+      catch(error){
+        alert(error);
+      }
+      finally{
+        setLoading(false);
+      }
+    }
+    else{
+      alert("Please Generate a prompt and photo");
+    }
   }
   const changeHandler = (e) =>{
     setForm({...form,[e.target.name]:e.target.value});
@@ -21,8 +60,31 @@ const CreatePost = () => {
     const randomPrompt = getRandomPrompt(form.prompt);
     setForm({...form,prompt: randomPrompt});
   }
-  const generateImageHandler = () =>{
+  const generateImageHandler = async() =>{
+    // this function send a request to the backend to connect from the api and get the image.
+    if (form.prompt) {
+      try {
+        setGeneratingImg(true);
+        const response = await fetch('http://localhost:8000/api/v1/dalle', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: form.prompt,
+          }),
+        });
 
+        const data = await response.json();
+        setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+      } catch (err) {
+        alert(err);
+      } finally {
+        setGeneratingImg(false);
+      }
+    } else {
+      alert('Please provide proper prompt');
+    }
   }
   // while making constact with backend api..
   const [generatingImg,setGeneratingImg] = useState(false);
@@ -64,13 +126,13 @@ const CreatePost = () => {
           </div>
         </div>
         <div className='mt-5 flex gap=5'>
-          <button type = "button" onSubmit={generateImageHandler} className='text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center'>{generatingImg?"Generating...":"Generate"}</button>
+          <button type = "button" onClick={generateImageHandler} className='text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center'>{generatingImg?"Generating...":"Generate"}</button>
         </div>
         <div className='mt-10'>
             <p className='mt-2 text-[#666e75] text-[14px]'>Once you have created the image you want, you can shar it with others in the community</p>
             <button
             type = "submit"
-            className='mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center'
+            className='mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center' onSubmit={submitHandler}
             >Share With Community</button>
         </div>
       </form>
