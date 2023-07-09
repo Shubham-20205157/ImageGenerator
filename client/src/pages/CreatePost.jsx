@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRandomPrompt } from '../utils';
 import { preview } from '../assets';
@@ -11,21 +11,6 @@ const CreatePost = () => {
     prompt:'',
     photo:'',
   });
-  // what will happen when something in the list chagnges the components reload itself
-  useEffect(()=>{
-    const fetchPosts = async ()=>{
-      setLoading(true);
-      try{
-        // we will fetch all the post by making a request to the posts get.
-      }
-      catch(error){
-        alert(error);
-      }
-      finally{
-        setLoading(false);
-      }
-    }
-  },[]);
   const submitHandler = async(e)=>{
     console.log("Submit Handler Clicked");
     e.preventDefault();
@@ -62,6 +47,34 @@ const CreatePost = () => {
   }
   const generateImageHandler = async() =>{
     // this function send a request to the backend to connect from the api and get the image.
+    // if(form.prompt){
+    //   try{
+    //     setGeneratingImg(true);
+    //     // while we are generating this image..we set the geneargin to the true...
+    //     const response = await fetch('http://localhost:8000/api/v1/dalle',{
+    //       method: 'POST',
+    //       headers:{
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify({prompt: form.prompt}),
+    //     });
+    //     const data = await response.json();
+    //     console.log("Here we have some data");
+    //     console.log(data);
+    //     setForm({...form,photo:`data:image/jpeg;base64,${
+    //       data.photo
+    //     }`});
+    //   }
+    //   catch(error){
+    //     alert(error);
+    //   }
+    //   finally{
+    //     setGeneratingImg(false);
+    //   }
+    // }
+    // else{
+    //   alter('Please Enter a Prompt');
+    // }
     if (form.prompt) {
       try {
         setGeneratingImg(true);
